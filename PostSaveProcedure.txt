@@ -1,0 +1,84 @@
+  [HttpPost]
+  [Route("AddCustomer2")]
+  public IActionResult AddCustomer2([FromBody] List<CustomerBLL> model)
+  {
+
+      //int customerid = 0;
+      var customerid =  _ICustomerRepository.InsertCustomer2(model);
+
+      return Ok(customerid);
+
+  }    
+
+ public int InsertCustomer2(List<CustomerBLL> cust)
+ {
+     using var context = new BlogDbContext();
+     using var transaction = context.Database.BeginTransaction();
+     try
+     {
+        
+         List<Customer> customerModel = _mapper.Map<List<Customer>>(cust);
+         int customerid =  _customerdatalayer.InsertCustomer2(customerModel);
+         transaction.Commit();
+         return customerid;
+
+     }
+
+     catch (Exception ex)
+     {
+         int a = 0;
+         transaction.Rollback();
+         return a;
+
+     }
+
+ }
+
+public int InsertCustomer2(List<Customer> cust)
+    {
+        int id=0;
+        try
+        {
+            for (int i = 0; i < cust.Count; i++)
+            {
+
+                db.Customers.Add(cust[i]);
+                db.SaveChanges();
+                id= cust[i].Id;
+                //db.SaveChangesAsync();              
+            }
+
+            return id;
+            // db.Customers.AddAsync(cust);
+            //  await db.Customers.AddAsync(cust);
+            //  db.SaveChanges();
+            //  var id = cust.Id;
+            //db.SaveChangesAsync();
+
+        }
+
+        catch(Exception ex)
+        {
+            return 0;
+
+        }
+}
+
+ var product = await db.Products.FindAsync(id);  
+            if (product == null)  
+            {  
+                return NotFound();  
+            }  
+  
+            db.Products.Remove(product);  
+            await db.SaveChangesAsync();  
+  
+            return product;  
+
+  var old_staff = db.Customers.FirstOrDefault(e => e.Id == cust.Id);
+  //update with new staff information
+  db.Entry(old_staff).CurrentValues.SetValues(cust);
+  db.SaveChanges();          
+  var id = cust.Id;
+  //db.SaveChangesAsync();
+  return id;
